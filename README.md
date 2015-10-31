@@ -1,5 +1,5 @@
 # **Buggit**
-<img src="http://lee-leon.github.io/images/github/logo/buggit.jpg" />
+<img src="http://lee-leon.github.io/images/github/logo/buggit-logo.jpg" />
 
 ------
 
