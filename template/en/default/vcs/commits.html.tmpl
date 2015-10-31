@@ -1,0 +1,79 @@
+[%# The contents of this file are subject to the Mozilla Public
+  # License Version 1.1 (the "License"); you may not use this file
+  # except in compliance with the License. You may obtain a copy of
+  # the License at http://www.mozilla.org/MPL/
+  #
+  # Software distributed under the License is distributed on an "AS
+  # IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
+  # implied. See the License for the specific language governing
+  # rights and limitations under the License.
+  #
+  # The Original Code is the VCS Bugzilla Extension.
+  #
+  # The Initial Developer of the Original Code is Red Hat, Inc.
+  # Portions created by the Initial Developer are Copyright (C) 2010
+  # the Initial Developer. All Rights Reserved.
+  #
+  # Contributor(s): 
+  #   Max Kanat-Alexander <mkanat@everythingsolved.com>
+  #%]
+
+<script type="text/javascript">
+<!--
+  function toggleCommitDetails(commit_id) {
+      var details = document.getElementById('vcs_commit_' + commit_id);
+      var row = document.getElementById('vcs_commit_row_' + commit_id);
+      bz_toggleClass(details, 'bz_default_hidden');
+      bz_toggleClass(row, 'vcs_expanded_item');
+  }
+// -->
+</script>
+
+<ul class="vcs_commits_list">
+  [% FOREACH commit = bug.vcs_commits %]
+    <li onclick="toggleCommitDetails([% commit.id FILTER js %])"
+        
+        id="vcs_commit_row_[% commit.id FILTER html %]"
+        class="vcs_commit_row">[% PROCESS format_commit %]</li>
+  [% END %]
+</ul>
+
+[% BLOCK format_commit %]
+  [% vcs_commit_link(commit) FILTER none %]
+  by
+  [%+ IF commit.author.match('@') AND user.id %]
+    <a href="mailto:[% commit.author FILTER uri %]">
+  [% END %]
+  [% commit.author FILTER email FILTER html %]
+  [% '</a>' IF commit.author.match('@') AND user.id %]
+  at <span class="vcs_commit_time">[% commit.commit_time FILTER time %]</span>
+  
+  <div class="vcs_commit_details bz_default_hidden"
+       id="vcs_commit_[% commit.id FILTER html %]">
+    
+    <p class="vcs_commit_repo">
+      Checked in to
+      <strong>[% commit.repo FILTER html %][% commit.project FILTER html %]</strong>
+    </p>
+    
+    <p class="vcs_commit_message">
+      [% commit.message FILTER quoteUrls(bug) FILTER vcs_br %]
+    </p>
+    
+    <p class="vcs_commit_files_changed">
+      [% IF commit.files.size == 1 %]
+        <strong>[% commit.files.size FILTER html %]</strong> file changed:
+      [% ELSE %]
+        <strong>[% commit.files.size FILTER html %]</strong> files changed:
+      [% END %]
+    </p>
+    
+    <ul class="vcs_commit_files">
+      [% FOREACH file = commit.files %]
+        <li>[% file.name FILTER html %]
+          (+[% file.added FILTER html %]
+           / -[% file.removed FILTER html %])</li>
+      [% END %]
+    </ul>
+  </div>
+[% END %]

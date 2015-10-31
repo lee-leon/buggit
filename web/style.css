@@ -1,0 +1,17 @@
+/* Highlight the row for the bug being voted on */
+.vcs_commits_list {
+    padding: 0;
+    margin: 0;
+    margin-left: 2em;
+    
+    list-style-image: url('plus.png');
+}
+.vcs_expanded_item {
+    list-style-image: url('minus.png');
+}
+.vcs_commits_list ul {
+    list-style-image: none;
+}
+.commits_label {
+    text-align: left;
+}

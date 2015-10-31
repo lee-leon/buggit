@@ -1,0 +1,84 @@
+[%# The contents of this file are subject to the Mozilla Public
+  # License Version 1.1 (the "License"); you may not use this file
+  # except in compliance with the License. You may obtain a copy of
+  # the License at http://www.mozilla.org/MPL/
+  #
+  # Software distributed under the License is distributed on an "AS
+  # IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
+  # implied. See the License for the specific language governing
+  # rights and limitations under the License.
+  #
+  # The Original Code is the Bugzilla Bug Tracking System.
+  #
+  # The Initial Developer of the Original Code is Red Hat, Inc.
+  # Portions created by the Initial Developer are Copyright (c) 2010
+  # the Initial Developer. All Rights Reserved.
+  #
+  # Contributor(s):
+  #   Max Kanat-Alexander <mkanat@everythingsolved.com>
+  #%]
+[%
+   title = "VCS"
+   desc = "Control the VCS Extension"
+%]
+
+[% vcs_repos = BLOCK %]
+  A list of VCS repositories that users may link bugs to. Each line starts
+  with the type of VCS that the repository is, then a space, then the URL
+  or path to the repository. A "repository" is the root location of the VCS that
+  you are using. For example, if you have a project at
+  <strong>svn://svn.example.com/svn/my_project/branches/3.0</strong>,
+  then your repository would be <strong>svn://svn.example.com/svn/</strong>.
+  
+  <p>In that specific case, the full line you'd specify in this parameter
+    would be:</p>
+  
+  <p>Svn svn://svn.example.com/svn/</p>
+  
+  <p>The valid VCS types are <strong>Svn</strong> (Subversion),
+    <strong>CVS</strong>, <strong>Bzr</strong> (Bazaar), <strong>Hg</strong>
+    (Mercurial), and <strong>Git</strong>.</p>
+  
+  <p>For more information on the format of repository URLs for each VCS, read
+  the documentation for <a href="http://search.cpan.org/dist/VCI/">the relevant
+  "VCI::VCS::" module</a> for your system.</p>
+[% END %]
+
+[% vcs_web = BLOCK %]
+  A mapping between a particular VCS repository and a web view of that
+  repository. On each line of this parameter, specify first the repository
+  from vcs_repos, then a space, and then the full URL for the web view
+  of a commit in that repository, like this:
+  
+  <p>svn://svn.example.com/svn/
+    http://svn.example.com/viewvc?view=revision&amp;revision=%revno%</p>
+  
+  <p>There are certain special values that you can insert into the web view
+    URL, and they will be translated when linking to the web view for each
+    commit:</p>
+  
+  <dl>
+    <dt>%project%</dt>
+      <dd>The path to the project (branch) that a commit was done against,
+    <dt>%revno%</dt>
+      <dd>The revision number of the commit in that project.</dd>
+    <dt>%revision%</dt>
+      <dd>The globally-unique id of the revision for this particular commit.
+        In some VCSes this is a long string, different from %revno%.</dd>
+  </dl>
+[% END %]
+
+[% vcs_path = BLOCK %]
+  In order to operate properly, the VCS extension needs to know where the
+  client binaries are for each VCS you plan to integrate with. We don't need
+  this for Subversion, but we do need it for all the other VCSes.
+  
+  <p>This parameter is in the same format as the PATH environment variable
+    on your system. The webserver needs to be able to access all the paths
+    specified in this list.</p>
+[% END %]
+
+[% param_descs = {
+  "vcs_repos" => vcs_repos,
+  "vcs_web"   => vcs_web,
+} %]
